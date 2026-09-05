@@ -1,283 +1,200 @@
 import streamlit as st
-import pandas as pd
-import joblib
 
-# ======================================
-# Page Configuration
-# ======================================
+from style import apply_theme
+
 
 st.set_page_config(
-    page_title="Vehicle Mileage Prediction",
+    page_title="Ethanol Vehicle AI",
     page_icon="🚗",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="expanded",
 )
 
-# ======================================
-# Load Model Files
-# ======================================
+apply_theme()
 
-best_model = joblib.load("models/best_model.pkl")
-label_encoders = joblib.load("models/label_encoders.pkl")
-feature_names = joblib.load("models/feature_names.pkl")
 
-# ======================================
-# Sidebar
-# ======================================
+# =========================================================
+# HERO
+# =========================================================
 
-st.sidebar.title("🚗 Vehicle Mileage Prediction")
+st.title("🚗 Ethanol Vehicle AI Intelligence")
 
-st.sidebar.success("Model Loaded Successfully")
-
-st.sidebar.markdown("---")
-
-st.sidebar.subheader("📊 Model Information")
-
-st.sidebar.write("**Algorithm:** CatBoost Regressor")
-st.sidebar.write("**Hyperparameter Tuning:** GridSearchCV + RandomizedSearchCV")
-st.sidebar.write("**Features Used:** 20")
-
-st.sidebar.markdown("---")
-
-st.sidebar.info(
-    "This application predicts the mileage (km/L) of an ethanol blend vehicle."
+st.write(
+    "An intelligent platform for vehicle mileage prediction, "
+    "ethanol-blend analysis, GenAI assistance and interactive analytics."
 )
 
-# ======================================
-# Main Title
-# ======================================
+st.caption(
+    "⚡ Machine Learning   •   🤖 GenAI   •   🔎 RAG   •   📊 Business Intelligence"
+)
 
-st.title("🚗 Ethanol Blend Vehicle Mileage Prediction")
+st.divider()
 
-st.markdown("""
-Enter the vehicle specifications and driving conditions below to predict the vehicle mileage.
-""")
 
-# ======================================
-# Input Section
-# ======================================
+# =========================================================
+# PLATFORM MODULES
+# =========================================================
 
-col1, col2 = st.columns(2)
+st.subheader("🧭 Explore the Platform")
 
-# -----------------------------
-# Left Column
-# -----------------------------
+col1, col2, col3 = st.columns(3, gap="large")
+
 
 with col1:
 
-    st.subheader("🚘 Vehicle Details")
+    with st.container(border=True):
 
-    vehicle_age = st.number_input(
-        "Vehicle Age (Years)",
-        min_value=0,
-        max_value=20,
-        value=5
-    )
+        st.markdown("### 🧮 ML Mileage Predictor")
 
-    engine_cc = st.number_input(
-        "Engine CC",
-        min_value=800,
-        max_value=3000,
-        value=1200
-    )
+        st.write(
+            "Predict vehicle mileage using the trained "
+            "**CatBoost regression model**."
+        )
 
-    horsepower = st.number_input(
-        "Horsepower",
-        min_value=40,
-        max_value=300,
-        value=95
-    )
+        st.caption(
+            "Enter vehicle and driving parameters to receive "
+            "an instant mileage prediction."
+        )
 
-    vehicle_weight = st.number_input(
-        "Vehicle Weight (kg)",
-        min_value=500,
-        max_value=3000,
-        value=1100
-    )
+        if st.button(
+            "Open Mileage Predictor →",
+            key="predictor",
+            use_container_width=True,
+        ):
+            st.switch_page("pages/1_ML_Prediction.py")
 
-    transmission = st.selectbox(
-        "Transmission",
-        ["Automatic", "Manual"]
-    )
-
-    ethanol_blend = st.slider(
-        "Ethanol Blend (%)",
-        0,
-        100,
-        20
-    )
-
-    fuel_price = st.number_input(
-        "Fuel Price",
-        value=104.0
-    )
-
-    trip_distance = st.number_input(
-        "Trip Distance (km)",
-        value=150.0
-    )
-
-    average_speed = st.number_input(
-        "Average Speed (km/h)",
-        value=65.0
-    )
-
-    engine_rpm = st.number_input(
-        "Engine RPM",
-        value=2400
-    )
-
-# -----------------------------
-# Right Column
-# -----------------------------
 
 with col2:
 
-    st.subheader("🌦 Driving Conditions")
+    with st.container(border=True):
 
-    tire_pressure = st.number_input(
-        "Tire Pressure (PSI)",
-        value=32
+        st.markdown("### 🤖 GenAI Vehicle Assistant")
+
+        st.write(
+            "Ask questions about ethanol fuel, mileage, "
+            "engine performance and vehicle behavior."
+        )
+
+        st.caption(
+            "Hybrid RAG search + vehicle dataset + Groq LLM."
+        )
+
+        if st.button(
+            "Open GenAI Assistant →",
+            key="genai",
+            use_container_width=True,
+        ):
+            st.switch_page("pages/2_GenAI_Assistant.py")
+
+
+with col3:
+
+    with st.container(border=True):
+
+        st.markdown("### 📊 Vehicle Analytics")
+
+        st.write(
+            "Explore interactive vehicle mileage and "
+            "ethanol-blend analytics."
+        )
+
+        st.caption(
+            "Analyze trends and vehicle performance using Tableau."
+        )
+
+        if st.button(
+            "Open Analytics Dashboard →",
+            key="tableau",
+            use_container_width=True,
+        ):
+            st.switch_page("pages/3_Tableau_Dashboard.py")
+
+
+# =========================================================
+# OVERVIEW
+# =========================================================
+
+st.divider()
+
+st.subheader("📈 Platform Overview")
+
+c1, c2, c3, c4 = st.columns(4)
+
+with c1:
+    st.metric("🚗 Vehicle Records", "63K+")
+
+with c2:
+    st.metric("📋 Features", "27")
+
+with c3:
+    st.metric("🔎 RAG Chunks", "763")
+
+with c4:
+    st.metric("🧩 Modules", "3")
+
+
+# =========================================================
+# TECHNOLOGY
+# =========================================================
+
+st.divider()
+
+st.subheader("🛠 Technology Stack")
+
+t1, t2, t3, t4, t5 = st.columns(5)
+
+with t1:
+    st.info("🧠 **Machine Learning**\n\nCatBoost")
+
+with t2:
+    st.success("🤖 **GenAI**\n\nGroq LLM")
+
+with t3:
+    st.info("🔎 **RAG**\n\nHybrid Search")
+
+with t4:
+    st.success("🗄 **Vector DB**\n\nChroma")
+
+with t5:
+    st.info("📊 **BI**\n\nTableau")
+
+
+# =========================================================
+# PROJECT INFORMATION
+# =========================================================
+
+st.divider()
+
+with st.expander("ℹ️ About this project"):
+
+    st.markdown(
+        """
+        ### 🎯 Project Goal
+
+        Predict `Mileage_km_per_L` for vehicles operating under
+        different ethanol-blend and driving conditions.
+
+        ### 🧠 Machine Learning
+
+        A trained **CatBoost regression model** is used for
+        vehicle mileage prediction.
+
+        ### 🤖 Generative AI
+
+        The application combines **hybrid RAG retrieval**,
+        vehicle dataset information and a Groq-hosted LLM.
+
+        ### 📊 Business Intelligence
+
+        Tableau provides interactive exploration of mileage,
+        ethanol blend and vehicle performance.
+        """
     )
 
-    maintenance = st.selectbox(
-        "Maintenance Status",
-        ["Good", "Average", "Poor"]
-    )
 
-    road = st.selectbox(
-        "Road Type",
-        ["City", "Highway", "Mixed", "Rural"]
-    )
-
-    traffic = st.selectbox(
-        "Traffic Level",
-        ["Low", "Medium", "High"]
-    )
-
-    temperature = st.number_input(
-        "Temperature (°C)",
-        value=30
-    )
-
-    humidity = st.number_input(
-        "Humidity (%)",
-        value=60
-    )
-
-    weather = st.selectbox(
-        "Weather",
-        ["Clear", "Fog", "Rain"]
-    )
-
-    ac_usage = st.selectbox(
-        "AC Usage",
-        ["Yes", "No"]
-    )
-
-    driving = st.selectbox(
-        "Driving Style",
-        ["Smooth", "Normal", "Aggressive"]
-    )
-
-    passengers = st.slider(
-        "Passengers",
-        1,
-        5,
-        3
-    )
-
-# ======================================
-# Prediction
-# ======================================
-
-if st.button("🚗 Predict Mileage", use_container_width=True):
-
-    new_vehicle = pd.DataFrame({
-
-        "Vehicle_Age":[vehicle_age],
-        "Engine_CC":[engine_cc],
-        "Horsepower":[horsepower],
-        "Vehicle_Weight":[vehicle_weight],
-        "Transmission":[transmission],
-        "Ethanol_Blend":[ethanol_blend],
-        "Fuel_Price":[fuel_price],
-        "Trip_Distance_km":[trip_distance],
-        "Average_Speed":[average_speed],
-        "Engine_RPM":[engine_rpm],
-        "Tire_Pressure_PSI":[tire_pressure],
-        "Maintenance_Status":[maintenance],
-        "Road_Type":[road],
-        "Traffic_Level":[traffic],
-        "Temperature":[temperature],
-        "Humidity":[humidity],
-        "Weather":[weather],
-        "AC_Usage":[ac_usage],
-        "Driving_Style":[driving],
-        "Passengers":[passengers]
-
-    })
-
-    categorical_columns = [
-        "Transmission",
-        "Maintenance_Status",
-        "Road_Type",
-        "Traffic_Level",
-        "Weather",
-        "AC_Usage",
-        "Driving_Style"
-    ]
-
-    # -----------------------------
-    # Safe Encoding
-    # -----------------------------
-
-    try:
-
-        for col in categorical_columns:
-            new_vehicle[col] = label_encoders[col].transform(new_vehicle[col])
-
-    except ValueError as e:
-
-        st.error(f"Encoding Error: {e}")
-        st.stop()
-
-    # Arrange feature order
-
-    new_vehicle = new_vehicle[feature_names]
-
-    # -----------------------------
-    # Prediction
-    # -----------------------------
-
-    with st.spinner("Predicting Vehicle Mileage..."):
-
-        prediction = best_model.predict(new_vehicle)
-
-    st.success("Prediction Completed Successfully ✅")
-
-    # -----------------------------
-    # Result
-    # -----------------------------
-
-    st.metric(
-        label="🚗 Predicted Mileage",
-        value=f"{prediction[0]:.2f} km/L"
-    )
-
-    # -----------------------------
-    # Show Encoded Data
-    # -----------------------------
-
-    with st.expander("📋 Show Processed Input Data"):
-
-        st.dataframe(new_vehicle)
-
-# ======================================
-# Footer
-# ======================================
-
-st.markdown("---")
+st.divider()
 
 st.caption(
-    "Developed by Sujeet Badade | CDAC DBDA Final Project | Machine Learning using CatBoost Regressor"
+    "🚗 Ethanol Vehicle AI Intelligence Platform  |  "
+    "ML • RAG • GenAI • Business Intelligence"
 )

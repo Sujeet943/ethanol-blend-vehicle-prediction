@@ -5,3 +5,13 @@ scikit-learn==1.7.1
 catboost==1.2.8
 joblib==1.5.2
 plotly==6.3.0
+python-dotenv
+groq
+langchain
+langchain-community
+langchain-huggingface
+langchain-chroma
+chromadb
+sentence-transformers
+rank-bm25
+pypdf
