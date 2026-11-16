@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 import joblib
@@ -24,10 +25,6 @@ st.markdown(
     """
     <style>
 
-    /* =====================================================
-       MAIN PAGE BACKGROUND
-    ===================================================== */
-
     .stApp {
         background: linear-gradient(
             135deg,
@@ -47,11 +44,6 @@ st.markdown(
         padding-bottom: 3rem !important;
     }
 
-
-    /* =====================================================
-       SIDEBAR
-    ===================================================== */
-
     section[data-testid="stSidebar"] {
         background: linear-gradient(
             180deg,
@@ -65,11 +57,6 @@ st.markdown(
     section[data-testid="stSidebar"] * {
         color: #07527a !important;
     }
-
-
-    /* =====================================================
-       HEADINGS
-    ===================================================== */
 
     h1 {
         color: #07527a !important;
@@ -90,11 +77,6 @@ st.markdown(
         color: #285b72 !important;
     }
 
-
-    /* =====================================================
-       LABELS
-    ===================================================== */
-
     label {
         color: #145873 !important;
         font-weight: 600 !important;
@@ -107,11 +89,6 @@ st.markdown(
     [data-testid="stWidgetLabel"] p {
         color: #145873 !important;
     }
-
-
-    /* =====================================================
-       NUMBER INPUTS
-    ===================================================== */
 
     div[data-testid="stNumberInput"] div[data-baseweb="input"] {
         background-color: #dff2f8 !important;
@@ -140,11 +117,6 @@ st.markdown(
         background-color: #cceaf3 !important;
     }
 
-
-    /* =====================================================
-       SELECT BOXES
-    ===================================================== */
-
     div[data-testid="stSelectbox"] div[data-baseweb="select"] > div {
         background-color: #dff5ed !important;
         border: 1px solid #b7ded1 !important;
@@ -163,11 +135,6 @@ st.markdown(
         fill: #08705f !important;
     }
 
-
-    /* =====================================================
-       SLIDER
-    ===================================================== */
-
     div[data-testid="stSlider"] [data-baseweb="slider"] {
         margin-top: 5px;
     }
@@ -181,11 +148,6 @@ st.markdown(
         background-color: #d0e8df !important;
     }
 
-
-    /* =====================================================
-       BUTTONS
-    ===================================================== */
-
     div.stButton > button {
         background: linear-gradient(
             90deg,
@@ -194,13 +156,9 @@ st.markdown(
         ) !important;
 
         color: #07527a !important;
-
         border: 1px solid #a9d5df !important;
-
         border-radius: 9px !important;
-
         min-height: 45px !important;
-
         font-weight: 700 !important;
 
         box-shadow: 0 2px 6px rgba(
@@ -227,11 +185,6 @@ st.markdown(
         color: #064b6d !important;
     }
 
-
-    /* =====================================================
-       CONTAINERS
-    ===================================================== */
-
     div[data-testid="stVerticalBlockBorderWrapper"] {
         background: rgba(
             255,
@@ -241,7 +194,6 @@ st.markdown(
         ) !important;
 
         border: 1px solid #c7e3e3 !important;
-
         border-radius: 12px !important;
 
         box-shadow: 0 2px 8px rgba(
@@ -252,19 +204,9 @@ st.markdown(
         ) !important;
     }
 
-
-    /* =====================================================
-       SUCCESS MESSAGE
-    ===================================================== */
-
     div[data-testid="stAlert"] {
         border-radius: 9px !important;
     }
-
-
-    /* =====================================================
-       METRIC
-    ===================================================== */
 
     [data-testid="stMetric"] {
         background: linear-gradient(
@@ -274,9 +216,7 @@ st.markdown(
         ) !important;
 
         border: 1px solid #c2e0e1 !important;
-
         border-radius: 12px !important;
-
         padding: 18px !important;
     }
 
@@ -289,16 +229,9 @@ st.markdown(
         font-weight: 800 !important;
     }
 
-
-    /* =====================================================
-       EXPANDER
-    ===================================================== */
-
     div[data-testid="stExpander"] {
         background-color: #eefaf7 !important;
-
         border: 1px solid #c5e1dc !important;
-
         border-radius: 10px !important;
     }
 
@@ -311,29 +244,14 @@ st.markdown(
         font-weight: 600 !important;
     }
 
-
-    /* =====================================================
-       DATAFRAME
-    ===================================================== */
-
     div[data-testid="stDataFrame"] {
         border: 1px solid #c5e1e3 !important;
         border-radius: 8px !important;
     }
 
-
-    /* =====================================================
-       DIVIDER
-    ===================================================== */
-
     hr {
         border-color: #c5e0e3 !important;
     }
-
-
-    /* =====================================================
-       GENERAL TEXT
-    ===================================================== */
 
     .stMarkdown {
         color: #285b72 !important;
@@ -380,6 +298,28 @@ st.write(
 
 
 # ==========================================================
+# HIDDEN INPUTS - DEFAULT VALUES
+# ==========================================================
+
+# These seven inputs are hidden from the user interface.
+# They are still passed internally to the trained model.
+
+transmission = "Automatic"
+
+engine_rpm = 2400
+
+tire_pressure = 32.0
+
+road = "City"
+
+temperature = 30.0
+
+humidity = 60.0
+
+passengers = 3
+
+
+# ==========================================================
 # INPUT SECTION
 # ==========================================================
 
@@ -387,12 +327,12 @@ col1, col2 = st.columns(2, gap="large")
 
 
 # ==========================================================
-# VEHICLE / ENGINE INFORMATION
+# VEHICLE INFORMATION
 # ==========================================================
 
 with col1:
 
-    st.subheader("Vehicle & Engine")
+    st.subheader("Vehicle Information")
 
     vehicle_age = st.number_input(
         "Vehicle Age",
@@ -422,11 +362,6 @@ with col1:
         value=1100
     )
 
-    transmission = st.selectbox(
-        "Transmission",
-        ["Automatic", "Manual"]
-    )
-
     ethanol_blend = st.slider(
         "Ethanol Blend (%)",
         min_value=0,
@@ -449,48 +384,23 @@ with col1:
         value=65.0
     )
 
-    engine_rpm = st.number_input(
-        "Engine RPM",
-        value=2400
-    )
-
 
 # ==========================================================
-# DRIVING / ENVIRONMENT INFORMATION
+# DRIVING INFORMATION
 # ==========================================================
 
 with col2:
 
-    st.subheader("Driving & Environment")
-
-    tire_pressure = st.number_input(
-        "Tyre Pressure (PSI)",
-        value=32.0
-    )
+    st.subheader("Driving Information")
 
     maintenance = st.selectbox(
         "Maintenance Status",
         ["Good", "Average", "Poor"]
     )
 
-    road = st.selectbox(
-        "Road Type",
-        ["City", "Highway", "Mixed", "Rural"]
-    )
-
     traffic = st.selectbox(
         "Traffic Level",
         ["Low", "Medium", "High"]
-    )
-
-    temperature = st.number_input(
-        "Temperature",
-        value=30.0
-    )
-
-    humidity = st.number_input(
-        "Humidity",
-        value=60.0
     )
 
     weather = st.selectbox(
@@ -508,13 +418,6 @@ with col2:
         ["Smooth", "Normal", "Aggressive"]
     )
 
-    passengers = st.slider(
-        "Passengers",
-        min_value=1,
-        max_value=5,
-        value=3
-    )
-
 
 # ==========================================================
 # PREDICTION BUTTON
@@ -528,7 +431,7 @@ if st.button(
 ):
 
     # ------------------------------------------------------
-    # CREATE INPUT DATAFRAME
+    # CREATE COMPLETE INPUT DATAFRAME FOR MODEL
     # ------------------------------------------------------
 
     new_vehicle = pd.DataFrame({
@@ -606,7 +509,7 @@ if st.button(
 
 
     # ------------------------------------------------------
-    # ARRANGE FEATURES
+    # ARRANGE FEATURES AS EXPECTED BY MODEL
     # ------------------------------------------------------
 
     new_vehicle = new_vehicle[
@@ -684,6 +587,7 @@ if st.button(
         vehicle_data
     )
 
+    # Keep all original features for model compatibility
     st.session_state.processed_input = (
         new_vehicle.copy()
     )
@@ -743,7 +647,7 @@ if "predicted_mileage" in st.session_state:
 
 
     # ======================================================
-    # PROCESSED INPUT
+    # PROCESSED INPUT - HIDE 7 FEATURES
     # ======================================================
 
     with st.expander(
@@ -752,8 +656,33 @@ if "predicted_mileage" in st.session_state:
 
         if "processed_input" in st.session_state:
 
+            hidden_features = [
+
+                "Transmission",
+
+                "Engine_RPM",
+
+                "Tire_Pressure_PSI",
+
+                "Road_Type",
+
+                "Temperature",
+
+                "Humidity",
+
+                "Passengers"
+            ]
+
+            display_input = (
+                st.session_state.processed_input
+                .drop(
+                    columns=hidden_features,
+                    errors="ignore"
+                )
+            )
+
             st.dataframe(
-                st.session_state.processed_input,
+                display_input,
                 use_container_width=True
             )
 
