@@ -1,49 +1,39 @@
-# Environment / secrets
-.env
-.streamlit/secrets.toml
-
 # Python
 __pycache__/
 *.py[cod]
-.ipynb_checkpoints/
+.venv/
+venv/
+env/
 
-# Logs
-logs/
+# Secrets
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+
+# Private datasets and research documents
+*.csv
+*.xlsx
+*.xls
+*.pdf
+
+# RAG generated files
+vector_db/
+vector_db_backup*/
+rag/chunks.pkl
+rag/restricted_chunks.pkl
+rag/review_chunks.pkl
+rag/public_chunks.pkl
+rag/review_*.pkl
+*.pkl
+
+# Logs and cache
 *.log
-
-# Temporary files
-*.tmp
-findstr
-
-# Local / backup files
-app - Copy.py
-backup_app.py
-
-# Temporary notebooks
-Untitled.ipynb
-notebooks/Untitled.ipynb
-notebooks/Untitled1.ipynb
-
-# Local test scripts
-check_labels.py
-check_loader.py
-check_vector.py
-ml_test.py
-test.py
-test1.py
-test_bm25.py
-test_context.py
-test_context_only.py
-test_embedding.py
-test_ethanol.py
-test_explanation.py
-test_groq.py
-test_rag.py
-test_retriever.py
-test_router.py
-
-# Local/generated vector data
-chroma_dataset/
-
-# Python tooling
+.cache/
 .pytest_cache/
+
+# OS and editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

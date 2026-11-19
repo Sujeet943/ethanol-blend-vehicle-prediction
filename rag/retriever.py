@@ -1,12 +1,14 @@
+
 from pathlib import Path
 
-from rag.bm25 import bm25
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 
+from rag.bm25 import bm25
+
 
 # ==========================================================
-# Project Paths
+# PROJECT PATHS
 # ==========================================================
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -15,116 +17,84 @@ VECTOR_DB_PATH = BASE_DIR / "vector_db"
 
 
 # ==========================================================
-# Embedding Model
+# LOAD EMBEDDING MODEL
 # ==========================================================
 
-EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
+print("Loading RAG embedding model...")
 
 embeddings = HuggingFaceEmbeddings(
-    model_name=EMBEDDING_MODEL
+    model_name="sentence-transformers/all-MiniLM-L6-v2"
 )
 
 
 # ==========================================================
-# Chroma Vector Database
+# LOAD PUBLIC CHROMA DATABASE
 # ==========================================================
 
-vectordb = Chroma(
+if not VECTOR_DB_PATH.exists():
+    raise FileNotFoundError(
+        f"Vector database not found: {VECTOR_DB_PATH}"
+    )
+
+vector_db = Chroma(
     persist_directory=str(VECTOR_DB_PATH),
     embedding_function=embeddings
 )
 
-
-# ==========================================================
-# Vector Retriever
-# ==========================================================
-
-retriever = vectordb.as_retriever(
-    search_type="similarity",
-    search_kwargs={
-        "k": 5
-    }
+vector_retriever = vector_db.as_retriever(
+    search_kwargs={"k": 5}
 )
 
 
 # ==========================================================
-# Hybrid Retrieval
+# HYBRID RETRIEVAL
 # ==========================================================
 
-def retrieve(question: str):
-    """
-    Hybrid Search
-
-    1. Vector Search
-    2. BM25 Search
-    3. Merge Results
-    4. Remove Duplicates
-    5. Rank Documents
-    6. Return Top Documents
-    """
+def retrieve(question: str, k: int = 5):
 
     if not question or not question.strip():
         return []
 
-    # ------------------------------------------------------
-    # Vector Search
-    # ------------------------------------------------------
+    # --------------------------------------
+    # Vector semantic search
+    # --------------------------------------
 
-    vector_docs = retriever.invoke(question)
+    vector_docs = vector_retriever.invoke(question)
 
-    # ------------------------------------------------------
-    # BM25 Search
-    # ------------------------------------------------------
+    # --------------------------------------
+    # BM25 keyword search
+    # --------------------------------------
 
     keyword_docs = bm25.invoke(question)
 
-    # ------------------------------------------------------
-    # Merge Results
-    # ------------------------------------------------------
+    # --------------------------------------
+    # Merge both result sets
+    # --------------------------------------
 
-    all_docs = []
+    combined_docs = vector_docs + keyword_docs
 
-    # Vector search gets higher priority
-    for doc in vector_docs:
-        doc.metadata["score"] = 2
-        all_docs.append(doc)
+    unique_docs = []
+    seen = set()
 
-    # BM25 search gets lower priority
-    for doc in keyword_docs:
-        doc.metadata["score"] = 1
-        all_docs.append(doc)
+    for doc in combined_docs:
 
-    # ------------------------------------------------------
-    # Remove Duplicates
-    # ------------------------------------------------------
+        # Explicit public-only access control
+        if doc.metadata.get("access_level") != "public":
+            continue
 
-    merged = {}
+        content = doc.page_content.strip()
 
-    for doc in all_docs:
+        if not content or content in seen:
+            continue
 
-        key = (
-            doc.metadata.get("filename"),
-            doc.page_content[:150]
-        )
+        seen.add(content)
+        unique_docs.append(doc)
 
-        if key not in merged:
-            merged[key] = doc
+    # --------------------------------------
+    # Return top K documents
+    # --------------------------------------
 
-        else:
-            merged[key].metadata["score"] += doc.metadata["score"]
+    return unique_docs[:k]
 
-    # ------------------------------------------------------
-    # Rank Documents
-    # ------------------------------------------------------
 
-    ranked_docs = sorted(
-        merged.values(),
-        key=lambda d: d.metadata["score"],
-        reverse=True
-    )
-
-    # ------------------------------------------------------
-    # Return Best Documents
-    # ------------------------------------------------------
-
-    return ranked_docs[:5]
+print("Hybrid Retriever Loaded Successfully")
