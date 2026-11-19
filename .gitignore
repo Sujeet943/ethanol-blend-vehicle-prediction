@@ -1,3 +1,4 @@
+
 # Python
 __pycache__/
 *.py[cod]
@@ -17,15 +18,27 @@ env/
 *.xls
 *.pdf
 
-# RAG generated files
-vector_db/
-vector_db_backup*/
-rag/chunks.pkl
+# Allow only the verified public dataset chunks
+!rag/chunks.pkl
+
+# RAG private generated files
 rag/restricted_chunks.pkl
 rag/review_chunks.pkl
-rag/public_chunks.pkl
-rag/review_*.pkl
+rag/chunks_backup.pkl
+
+# Allow complete public ChromaDB database
+!vector_db/
+!vector_db/**
+
+# Keep vector database backups private
+vector_db_backup*/
+vector_db_backup/
+
+# Other pickle files are excluded by default
 *.pkl
+
+# Re-allow verified public BM25 chunks
+!rag/chunks.pkl
 
 # Logs and cache
 *.log
@@ -37,3 +50,15 @@ rag/review_*.pkl
 Thumbs.db
 .vscode/
 .idea/
+
+# Allow the cleaned dataset required by the application
+!data/
+!data/processed/
+!data/processed/cleaned_dataset.csv
+
+# Allow verified public RAG chunks
+!rag/chunks.pkl
+
+# Allow the complete public Chroma vector database
+!vector_db/
+!vector_db/**

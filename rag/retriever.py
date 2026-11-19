@@ -12,7 +12,6 @@ from rag.bm25 import bm25
 # ==========================================================
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 VECTOR_DB_PATH = BASE_DIR / "vector_db"
 
 
@@ -28,7 +27,7 @@ embeddings = HuggingFaceEmbeddings(
 
 
 # ==========================================================
-# LOAD PUBLIC CHROMA DATABASE
+# LOAD EXISTING CHROMA COLLECTION
 # ==========================================================
 
 if not VECTOR_DB_PATH.exists():
@@ -37,6 +36,7 @@ if not VECTOR_DB_PATH.exists():
     )
 
 vector_db = Chroma(
+    collection_name="langchain",
     persist_directory=str(VECTOR_DB_PATH),
     embedding_function=embeddings
 )
@@ -44,6 +44,9 @@ vector_db = Chroma(
 vector_retriever = vector_db.as_retriever(
     search_kwargs={"k": 5}
 )
+
+print("ChromaDB collection loaded:", "langchain")
+print("ChromaDB document count:", vector_db._collection.count())
 
 
 # ==========================================================
@@ -55,22 +58,13 @@ def retrieve(question: str, k: int = 5):
     if not question or not question.strip():
         return []
 
-    # --------------------------------------
-    # Vector semantic search
-    # --------------------------------------
-
+    # Semantic vector search
     vector_docs = vector_retriever.invoke(question)
 
-    # --------------------------------------
     # BM25 keyword search
-    # --------------------------------------
-
     keyword_docs = bm25.invoke(question)
 
-    # --------------------------------------
-    # Merge both result sets
-    # --------------------------------------
-
+    # Combine results
     combined_docs = vector_docs + keyword_docs
 
     unique_docs = []
@@ -78,7 +72,7 @@ def retrieve(question: str, k: int = 5):
 
     for doc in combined_docs:
 
-        # Explicit public-only access control
+        # Public-only filtering
         if doc.metadata.get("access_level") != "public":
             continue
 
@@ -89,10 +83,6 @@ def retrieve(question: str, k: int = 5):
 
         seen.add(content)
         unique_docs.append(doc)
-
-    # --------------------------------------
-    # Return top K documents
-    # --------------------------------------
 
     return unique_docs[:k]
 
