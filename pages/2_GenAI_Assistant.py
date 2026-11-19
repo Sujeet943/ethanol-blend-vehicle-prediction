@@ -1,4 +1,6 @@
+
 import streamlit as st
+import traceback
 
 from style import apply_theme
 from rag.rag_chain import ask_rag
@@ -108,6 +110,13 @@ if question:
                 answer = ask_rag(question)
 
             except Exception as e:
+
+                print("\n========== RAG ERROR TRACEBACK ==========")
+
+                traceback.print_exc()
+
+                print("==========================================\n")
+
                 answer = (
                     "⚠️ Unable to generate a response.\n\n"
                     f"Error: `{e}`"
